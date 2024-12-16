@@ -1,0 +1,14 @@
+{% extends 'base.html' %} 
+{% block title %}Freelancer Dashboard{% endblock %} 
+
+{% block content %}
+<div class="text-center">
+  <h2 class="mb-4">Welcome to Freelancer Dashboard</h2>
+  <p>
+    Hello <strong>{{ user.username }}</strong>, you are logged in as a
+    <span class="badge bg-primary">Freelancer</span>.
+  </p>
+  <a href="{% url 'project_list' %}" class="btn btn-primary">View Available Projects</a>
+
+</div>
+{% endblock %}

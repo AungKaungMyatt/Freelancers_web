@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Client Dashboard{% endblock %}
+
+{% block content %}
+<h2>Your Projects</h2>
+{% for project in request.user.projects.all %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h4 class="card-title">{{ project.title }}</h4>
+        <p>{{ project.description }}</p>
+        <a href="{% url 'view_applications' project.id %}" class="btn btn-primary">View Applications</a>
+    </div>
+</div>
+{% empty %}
+<p>You have not posted any projects yet.</p>
+{% endfor %}
+<a href="{% url 'post_project' %}" class="btn btn-success">Post a New Project</a>
+{% endblock %}
