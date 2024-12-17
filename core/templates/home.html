@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Welcome to Diablo{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1>Welcome to Diablo</h1>
+    <p>Your platform for connecting clients and freelancers.</p>
+
+    {% if not user.is_authenticated %}
+    <div class="mt-4">
+        <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Login</a>
+        <a href="{% url 'register' %}" class="btn btn-success btn-lg">Register</a>
+    </div>
+    {% else %}
+    <div class="mt-4">
+        {% if user.role == 'client' %}
+            <a href="{% url 'client_dashboard' %}" class="btn btn-info btn-lg">Go to Dashboard</a>
+        {% elif user.role == 'freelancer' %}
+            <a href="{% url 'freelancer_dashboard' %}" class="btn btn-info btn-lg">Go to Dashboard</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

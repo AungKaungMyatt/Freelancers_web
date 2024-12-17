@@ -1,14 +1,39 @@
-{% extends 'base.html' %} 
-{% block title %}Freelancer Dashboard{% endblock %} 
+{% extends 'base.html' %}
+{% block title %}Freelancer Dashboard{% endblock %}
 
 {% block content %}
-<div class="text-center">
-  <h2 class="mb-4">Welcome to Freelancer Dashboard</h2>
-  <p>
-    Hello <strong>{{ user.username }}</strong>, you are logged in as a
-    <span class="badge bg-primary">Freelancer</span>.
-  </p>
-  <a href="{% url 'project_list' %}" class="btn btn-primary">View Available Projects</a>
+<h1>Welcome, {{ user.username }}</h1>
+<h3>Projects You Applied For</h3>
 
-</div>
+{% if applications %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Project Title</th>
+            <th>Status</th>
+            <th>Applied On</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for application in applications %}
+        <tr>
+            <td>{{ application.project.title }}</td>
+            <td>
+                {% if application.status == 'pending' %}
+                    <span class="badge bg-warning">Pending</span>
+                {% elif application.status == 'accepted' %}
+                    <span class="badge bg-success">Accepted</span>
+                {% elif application.status == 'rejected' %}
+                    <span class="badge bg-danger">Rejected</span>
+                {% endif %}
+            </td>
+            <td>{{ application.applied_at }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>You have not applied for any projects yet.</p>
+<a href="{% url 'project_list' %}" class="btn btn-primary">View Available Projects</a>
+{% endif %}
 {% endblock %}

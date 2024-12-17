@@ -3,13 +3,64 @@
 
 {% block content %}
 <h2>Applications for "{{ project.title }}"</h2>
+
+<!-- Display success/error messages -->
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+<!-- Filter and Sort Options (GET Request) -->
+<form method="GET" class="mb-4">
+    <div class="row">
+        <div class="col-md-4">
+            <label for="status">Filter by Status:</label>
+            <select name="status" id="status" class="form-select" onchange="this.form.submit()">
+                <option value="">All</option>
+                <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="accepted" {% if status_filter == 'accepted' %}selected{% endif %}>Accepted</option>
+                <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>Rejected</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="sort">Sort by:</label>
+            <select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
+                <option value="date_desc" {% if sort_by == 'date_desc' %}selected{% endif %}>Newest First</option>
+                <option value="date_asc" {% if sort_by == 'date_asc' %}selected{% endif %}>Oldest First</option>
+            </select>
+        </div>
+    </div>
+</form>
+
+<!-- Applications List (POST Actions) -->
 <ul class="list-group">
     {% for application in applications %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
-        <span>{{ application.freelancer.username }} applied on {{ application.applied_at }}</span>
+        <div>
+            <strong>{{ application.freelancer.username }}</strong>
+            <span class="badge bg-info">{{ application.status }}</span>
+            <p>Applied on: {{ application.applied_at }}</p>
+        </div>
+        {% if application.status == 'pending' %}
+        <form method="POST" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="application_id" value="{{ application.id }}">
+            <button type="submit" name="action" value="accept"
+                    class="btn btn-success btn-sm"
+                    onclick="return confirm('Are you sure you want to accept this application?');">
+                Accept
+            </button>
+            <button type="submit" name="action" value="reject"
+                    class="btn btn-danger btn-sm"
+                    onclick="return confirm('Are you sure you want to reject this application?');">
+                Reject
+            </button>
+        </form>
+        {% endif %}
     </li>
     {% empty %}
-    <li class="list-group-item">No applications yet.</li>
+    <li class="list-group-item">No applications match your criteria.</li>
     {% endfor %}
 </ul>
 {% endblock %}

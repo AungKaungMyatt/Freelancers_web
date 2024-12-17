@@ -25,10 +25,25 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+#class Application(models.Model):
+    #project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='applications')
+    #freelancer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='applications')
+    #applied_at = models.DateTimeField(auto_now_add=True)
+
+    #def __str__(self):
+        #return f"{self.freelancer.username} applied for {self.project.title}"
+    
 class Application(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    ]
+
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='applications')
     freelancer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='applications')
     applied_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
-        return f"{self.freelancer.username} applied for {self.project.title}"
+        return f"{self.freelancer.username} - {self.project.title} ({self.status})"
