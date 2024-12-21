@@ -1,34 +1,73 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}User Profile{% endblock %}
 
 {% block content %}
-<h1>User Profile</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">User Profile</h1>
 
-{% if messages %}
-  {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-  {% endfor %}
-{% endif %}
+    <!-- Display Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
 
-<div class="row">
-    <!-- Update Profile Form -->
-    <div class="col-md-6">
-        <h3>Update Profile</h3>
-        <form method="POST">
-            {% csrf_token %}
-            {{ profile_form.as_p }}
-            <button type="submit" name="update_profile" class="btn btn-primary">Update Profile</button>
-        </form>
+    <div class="row">
+        <!-- User Information -->
+        <div class="col-md-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">User Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Username:</strong> {{ user.username }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Role:</strong> {{ user.get_role_display }}</p>
+                    <p><strong>Member Since:</strong> {{ user.date_joined|date:"F d, Y" }}</p>
+                    <p><strong>Last Login:</strong> {{ user.last_login|date:"F d, Y H:i" }}</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Change Password Form -->
-    <div class="col-md-6">
-        <h3>Change Password</h3>
-        <form method="POST">
-            {% csrf_token %}
-            {{ password_form.as_p }}
-            <button type="submit" name="change_password" class="btn btn-danger">Change Password</button>
-        </form>
+    <!-- Separate Update Profile and Change Password Sections -->
+    <div class="row">
+        <!-- Update Profile Form -->
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Update Profile</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ profile_form.as_p }}
+                        <button type="submit" name="update_profile" class="btn btn-primary w-100">Update Profile</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change Password Form -->
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Change Password</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ password_form.as_p }}
+                        <button type="submit" name="change_password" class="btn btn-danger w-100">Change Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
